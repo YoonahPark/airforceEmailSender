@@ -17,9 +17,19 @@ class _DriverAction:
 class _InitialWindowSetter(_DriverAction):
     def set(self):
         self.click(By.CSS_SELECTOR, "input[value='인터넷 편지쓰기']")
+        nextUrl = "https://www.airforce.mil.kr/user/indexSub.action?codyMenuSeq=156893223&siteId=last2&menuUIType=sub&dum=dum&command2=writeEmail&searchCate=&searchVal=&page=1&memberSeqVal=315145116&sodaeVal="
+        if not self.driver.current_url.startswith(nextUrl):
+            raise Exception("페이지 전환이 정상적으로 이루어지지 않았습니다.")
+        
         self.click(By.CSS_SELECTOR, "input[value='우편번호 검색']")
         self.driver.switch_to.window(self.driver.window_handles[1])
+        nextUrl = "http://www.juso.go.kr/addrlink/addrLinkUrl.do"
+        if self.driver.current_url != nextUrl:
+            raise Exception("페이지 전환이 정상적으로 이루어지지 않았습니다.")
+        
         self.click(By.CSS_SELECTOR, "button[id='proceed-button']")
+        if self.driver.current_url != nextUrl:
+            raise Exception("페이지 전환이 정상적으로 이루어지지 않았습니다.")
 
 class _AddressSetter(_DriverAction):
     def set(self, sender):
@@ -33,6 +43,9 @@ class _AddressSetter(_DriverAction):
         self.click(By.ID, "ckHstryYn")
         self.send_keys(By.ID, "keyword", self.sender.address)
         self.click(By.CSS_SELECTOR, "input[title='검색']")
+        nextUrl = "http://www.juso.go.kr/addrlink/addrLinkUrlSearch.do"
+        if self.driver.current_url != nextUrl:
+            raise Exception("페이지 전환이 정상적으로 이루어지지 않았습니다.")
         
     def __selectAddress(self): 
         self.click(By.ID, "roadAddrTd1")
@@ -43,6 +56,9 @@ class _AddressSetter(_DriverAction):
     def __submitAddress(self):
         self.click(By.CSS_SELECTOR, "a[href='javascript:setParent();']")
         self.driver.switch_to.window(self.driver.window_handles[0])
+        nextUrl = "https://www.airforce.mil.kr/user/indexSub.action?codyMenuSeq=156893223&siteId=last2&menuUIType=sub&dum=dum&command2=writeEmail&searchCate=&searchVal=&page=1&memberSeqVal=315145116&sodaeVal="
+        if not self.driver.current_url.startswith(nextUrl):
+            raise Exception("페이지 전환이 정상적으로 이루어지지 않았습니다.")
 
 class _EmailSender(_DriverAction):
     def send(self, sender, email):
@@ -61,6 +77,9 @@ class _EmailSender(_DriverAction):
         
     def __submitEmail(self):
         self.click(By.CSS_SELECTOR, "input[value='작성완료']")
+        nextUrl = "https://www.airforce.mil.kr/user/indexSub.action?codyMenuSeq=156893223&siteId=last2&menuUIType=sub&dum=dum&command2=saveEmailResult"
+        if not self.driver.current_url.startswith(nextUrl):
+            raise Exception("페이지 전환이 정상적으로 이루어지지 않았습니다.")
         
     def __verifySubmissionSuccess(self):
         message = self.driver.find_element(By.CSS_SELECTOR, "div[class='message']").text

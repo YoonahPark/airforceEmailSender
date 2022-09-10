@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
-from api.tools.tagsCleaner import InformationCleaner, EmailWritingPeriodCleaner
-from api.models.models import Airman
+from .tools.tagsCleaner import InformationCleaner, EmailWritingPeriodCleaner
+from .models.models import Airman
 
 class _AirmansWithSameProfileGetter:
     def __init__(self, airman):
@@ -27,13 +27,17 @@ class _AirmansWithSameProfileGetter:
         return informations
     
     def __getMemberSequence(self, sameResult):
+        if "교육생이 없습니다." in str(sameResult):
+            raise Exception("해당 이름, 생일을 가진 교육생이 없습니다.")
         choiceTag = sameResult.find(class_='choice')
         memberSequence = choiceTag.get('onclick')[14:23]
         return memberSequence
         
     def __getAirmanProfile(self, sameResult):
         airman = Airman(self.name, self.birthDate)
-        airman.memberSequence = self.__getMemberSequence(sameResult)
+        memberSequence = self.__getMemberSequence(sameResult)
+        airman.setMemberSequence(memberSequence)
+        airman.setUrl(memberSequence)
         informations = self.__getInformations(sameResult)
         airman.setInformations(informations)
         return airman
@@ -48,17 +52,20 @@ class _AirmansWithSameProfileGetter:
 
 class _EmailWritingPeriodGetter:
     def __init__(self, airman):
-        self.name = airman.name
-        self.birthDate = airman.birthDate
-        self.memberSequence = airman.memberSequence
+        self.url = airman.url
         self.indexOfEmailWritingPeriod = 4
         self.__createHtmlParser()
     
     def __createHtmlParser(self):
-        url = "https://www.airforce.mil.kr/user/indexSub.action?codyMenuSeq=156893223&siteId=last2&menuUIType=top&dum=dum&command2=getEmailList&searchName="+self.name+"&searchBirth="+self.birthDate+"&memberSeq="+self.memberSequence
-        response = requests.get(url, verify=False)
+        response = requests.get(self.url, verify=False)
         htmlDoc = response.text
         self.parser = BeautifulSoup(htmlDoc, 'html.parser')
+    
+    def getAirmanWithEmailWritingPeriod(self):
+        informationTags = self.parser.find(class_='info')
+        informations = informationTags.find_all('dd')
+        emailWritingPeriod = EmailWritingPeriodCleaner(informations[self.indexOfEmailWritingPeriod]).clean()
+        return emailWritingPeriod
     
     def getAirmanWithEmailWritingPeriod(self):
         informationTags = self.parser.find(class_='info')

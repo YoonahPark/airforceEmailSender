@@ -24,6 +24,9 @@ class Airman:
     def setMemberSequence(self, memberSequence):
         self.memberSequence = memberSequence
         
+    def setUrl(self, memberSequence):
+        self.url = "https://www.airforce.mil.kr/user/indexSub.action?codyMenuSeq=156893223&siteId=last2&menuUIType=top&dum=dum&command2=getEmailList&searchName="+self.name+"&searchBirth="+self.birthDate+"&memberSeq="+memberSequence
+        
     def setEmailWritingPeriod(self, emailWritingPeriod):
         self.emailWritingPeriod = emailWritingPeriod
         
