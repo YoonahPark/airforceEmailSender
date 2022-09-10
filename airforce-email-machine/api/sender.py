@@ -1,6 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 
 class _DriverAction:
     def __init__(self, driver):
@@ -17,7 +16,8 @@ class _DriverAction:
 class _InitialWindowSetter(_DriverAction):
     def set(self):
         self.click(By.CSS_SELECTOR, "input[value='인터넷 편지쓰기']")
-        nextUrl = "https://www.airforce.mil.kr/user/indexSub.action?codyMenuSeq=156893223&siteId=last2&menuUIType=sub&dum=dum&command2=writeEmail&searchCate=&searchVal=&page=1&memberSeqVal=315145116&sodaeVal="
+        nextUrl = "https://www.airforce.mil.kr/user/indexSub.action?codyMenuSeq=156893223&siteId=last2&menuUIType=top&dum=dum&command2=writeEmail&searchCate=&searchVal=&page=1"
+        print(self.driver.current_url)
         if not self.driver.current_url.startswith(nextUrl):
             raise Exception("페이지 전환이 정상적으로 이루어지지 않았습니다.")
         
@@ -46,8 +46,10 @@ class _AddressSetter(_DriverAction):
         nextUrl = "http://www.juso.go.kr/addrlink/addrLinkUrlSearch.do"
         if self.driver.current_url != nextUrl:
             raise Exception("페이지 전환이 정상적으로 이루어지지 않았습니다.")
+        if "검색된 내용이 없습니다." in self.driver.find_element(By.ID, "searchContentBox").text:
+            raise Exception("주소로 검색된 내용이 없습니다.")
         
-    def __selectAddress(self): 
+    def __selectAddress(self):
         self.click(By.ID, "roadAddrTd1")
         
     def __writeAddressDetail(self): 
@@ -56,7 +58,7 @@ class _AddressSetter(_DriverAction):
     def __submitAddress(self):
         self.click(By.CSS_SELECTOR, "a[href='javascript:setParent();']")
         self.driver.switch_to.window(self.driver.window_handles[0])
-        nextUrl = "https://www.airforce.mil.kr/user/indexSub.action?codyMenuSeq=156893223&siteId=last2&menuUIType=sub&dum=dum&command2=writeEmail&searchCate=&searchVal=&page=1&memberSeqVal=315145116&sodaeVal="
+        nextUrl = "https://www.airforce.mil.kr/user/indexSub.action?codyMenuSeq=156893223&siteId=last2&menuUIType=top&dum=dum&command2=writeEmail&searchCate=&searchVal=&page=1"
         if not self.driver.current_url.startswith(nextUrl):
             raise Exception("페이지 전환이 정상적으로 이루어지지 않았습니다.")
 
@@ -77,7 +79,7 @@ class _EmailSender(_DriverAction):
         
     def __submitEmail(self):
         self.click(By.CSS_SELECTOR, "input[value='작성완료']")
-        nextUrl = "https://www.airforce.mil.kr/user/indexSub.action?codyMenuSeq=156893223&siteId=last2&menuUIType=sub&dum=dum&command2=saveEmailResult"
+        nextUrl = "https://www.airforce.mil.kr/user/indexSub.action?codyMenuSeq=156893223&siteId=last2&menuUIType=top&dum=dum&command2=saveEmailResult"
         if not self.driver.current_url.startswith(nextUrl):
             raise Exception("페이지 전환이 정상적으로 이루어지지 않았습니다.")
         
