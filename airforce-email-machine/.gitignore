@@ -1,0 +1,4 @@
+api/__pycache__/
+.dist/
+__pycache__/
+venv/

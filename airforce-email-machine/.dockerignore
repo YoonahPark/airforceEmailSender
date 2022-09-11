@@ -1,0 +1,6 @@
+local/
+venv/
+__pycache__/
+.dist/
+__pycache__/
+.gitignore

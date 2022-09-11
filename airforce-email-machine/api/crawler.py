@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
-from tagsCleaner import InformationCleaner, EmailWritingPeriodCleaner
-from models import Airman
+from .tagsCleaner import InformationCleaner, EmailWritingPeriodCleaner
+from .models import Airman
 
 class _AirmansWithSameProfileGetter:
     def __init__(self, airman):

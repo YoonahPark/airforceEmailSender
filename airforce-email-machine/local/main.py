@@ -31,7 +31,7 @@ with open("local/userInputs/email/emailInformations", 'rt', encoding='UTF8') as 
     email.title = emailInformations[1].strip('\n')
     email.password = emailInformations[2].strip('\n')
 
-airmans = getAirmans(airman)
+airmans = getAirmans(airman.name, airman.birthDate)
 airman = selectAirman(airmans, 0)
-success = send(airman, sender, email)
+success = send(airman, sender, email, local=True)
 print(success)

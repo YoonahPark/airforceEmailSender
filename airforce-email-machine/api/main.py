@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from crawler import getAirmans, selectAirman
-from sender import send
+from .crawler import getAirmans, selectAirman
+from .sender import send
 
 app = FastAPI()
 
@@ -24,7 +24,7 @@ async def airmans(name: str, birthDate: str):
     airmans = getAirmans(name, birthDate)
     return airmans
 
-@app.post("/airmans/{airmanIndex}")
+@app.get("/airmans/{airmanIndex}")
 async def airman(airmanIndex: int, name: str, birthDate: str):
     airmans = getAirmans(name, birthDate)
     airman = selectAirman(airmans, airmanIndex)
