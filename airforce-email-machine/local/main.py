@@ -1,8 +1,8 @@
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-from api.models.models import Sender, Email, Airman
-from api.crawler import AirmanCrawler
-from api.sender import EmailSender
+from api.models import Sender, Email, Airman
+from api.crawler import getAirmans, selectAirman
+from api.sender import send
 
 airman = Airman("이름", "생일")
 sender = Sender("이름", "주소", "상세주소")
@@ -31,8 +31,7 @@ with open("local/userInputs/email/emailInformations", 'rt', encoding='UTF8') as 
     email.title = emailInformations[1].strip('\n')
     email.password = emailInformations[2].strip('\n')
 
-airmanCrawler = AirmanCrawler(airman)
-airmans = airmanCrawler.getList()
-airman = airmanCrawler.selectAirman(0)
-success = EmailSender(airman).send(sender, email)
+airmans = getAirmans(airman)
+airman = selectAirman(airmans, 0)
+success = send(airman, sender, email)
 print(success)

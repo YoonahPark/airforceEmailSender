@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
-from .tools.tagsCleaner import InformationCleaner, EmailWritingPeriodCleaner
-from .models.models import Airman
+from tagsCleaner import InformationCleaner, EmailWritingPeriodCleaner
+from models import Airman
 
 class _AirmansWithSameProfileGetter:
     def __init__(self, airman):
@@ -67,22 +67,13 @@ class _EmailWritingPeriodGetter:
         emailWritingPeriod = EmailWritingPeriodCleaner(informations[self.indexOfEmailWritingPeriod]).clean()
         return emailWritingPeriod
     
-    def getAirmanWithEmailWritingPeriod(self):
-        informationTags = self.parser.find(class_='info')
-        informations = informationTags.find_all('dd')
-        emailWritingPeriod = EmailWritingPeriodCleaner(informations[self.indexOfEmailWritingPeriod]).clean()
-        return emailWritingPeriod
-    
-class AirmanCrawler:
-    def __init__(self, airman):
-        self.airman = airman
-    
-    def getList(self):
-        self.airmans = _AirmansWithSameProfileGetter(self.airman).getAirmansWithSameProfile()
-        return self.airmans
-    
-    def selectAirman(self, airmanIndex):
-        self.airman = self.airmans[airmanIndex]
-        _EmailWritingPeriodGetter(self.airman).getAirmanWithEmailWritingPeriod
-        return self.airman
-    
+def getAirmans(name, birthDate):
+    airman = Airman(name, birthDate)
+    airmans = _AirmansWithSameProfileGetter(airman).getAirmansWithSameProfile()
+    return airmans
+
+def selectAirman(airmans, airmanIndex):
+    airman = airmans[airmanIndex]
+    emailWritingPeriod = _EmailWritingPeriodGetter(airman).getAirmanWithEmailWritingPeriod()
+    airman.setEmailWritingPeriod(emailWritingPeriod)
+    return airman

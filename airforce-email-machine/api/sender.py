@@ -87,23 +87,12 @@ class _EmailSender(_DriverAction):
         message = self.driver.find_element(By.CSS_SELECTOR, "div[class='message']").text
         return message=="정상적으로 등록되었습니다."
     
-class EmailSender:
-    def __init__(self, airman):
-        self.name = airman.name
-        self.birthDate = airman.birthDate
-        self.memberSequence = airman.memberSequence
-        self.__createDriver()
+def send(airman, sender, email):
+    url = airman.url
+    driver = webdriver.Edge(executable_path="applications/msedgedriver.exe")
+    driver.get(url)
     
-    def __createDriver(self):
-        url = "https://www.airforce.mil.kr/user/indexSub.action?codyMenuSeq=156893223&siteId=last2&menuUIType=top&dum=dum&command2=getEmailList&searchName="+self.name+"&searchBirth="+self.birthDate+"&memberSeq="+self.memberSequence
-        self.driver = webdriver.Edge(r"applications/msedgedriver.exe")
-        self.driver.get(url)
-        
-    def send(self, sender, email):
-        _InitialWindowSetter(self.driver).set()
-        _AddressSetter(self.driver).set(sender)
-        success = _EmailSender(self.driver).send(sender, email)
-        return success
-    
-    
-        
+    _InitialWindowSetter(driver).set()
+    _AddressSetter(driver).set(sender)
+    success = _EmailSender(driver).send(sender, email)
+    return success
