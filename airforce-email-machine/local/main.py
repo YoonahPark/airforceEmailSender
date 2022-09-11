@@ -16,8 +16,9 @@ with open("local/userinputs/airmanInformations.txt", 'rt', encoding='UTF8') as f
 with open("local/userInputs/userInformations.txt", 'rt', encoding='UTF8') as f:
     userInformations = f.readlines()
     sender.name = userInformations[0].strip('\n')
-    sender.address = userInformations[1].strip('\n')
-    sender.addressDetail = userInformations[2].strip('\n')
+    sender.zipCode = userInformations[1].strip('\n')
+    sender.address = userInformations[2].strip('\n')
+    sender.addressDetail = userInformations[3].strip('\n')
     
 with open("local/userInputs/email/contents.txt", 'rt', encoding='UTF8') as f:
     email.contents = f.read()

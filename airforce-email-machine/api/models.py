@@ -1,6 +1,7 @@
 class Sender:
-    def __init__(self, name, address, addressDetail):
+    def __init__(self, name, zipCode, address, addressDetail):
         self.name = name
+        self.zipCode = zipCode
         self.address = address
         self.addressDetail = addressDetail
         

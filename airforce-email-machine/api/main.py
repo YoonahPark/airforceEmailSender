@@ -16,6 +16,7 @@ class Email(BaseModel):
     
 class Sender(BaseModel):
     name : str
+    zipCode : str
     address : str
     addressDetail : str
 
