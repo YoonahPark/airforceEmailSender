@@ -57,10 +57,6 @@ def send(airman, sender, email, local=False):
     driver = None
     desired_capabilities = { "acceptInsecureCerts": True }
     options = webdriver.ChromeOptions()
-    options.add_argument("--allow-insecure-localhost")
-    options.add_argument("--ignore-certificate-errors")
-    options.add_argument("--allow-running-insecure-errors")
-    options.add_argument("--unsafely-treat-insecure-origin-as-secure")
     if(local):
         driver = webdriver.Chrome(executable_path="api/applications/chromedriver.exe", chrome_options=options)
     else:
