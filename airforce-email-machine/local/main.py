@@ -5,7 +5,7 @@ from api.crawler import getAirmans, selectAirman
 from api.sender import send
 
 airman = Airman("이름", "생일")
-sender = Sender("이름", "주소", "상세주소")
+sender = Sender("이름", "우편번호", "주소", "상세주소")
 email = Email("관계", "제목", "내용", "생일")
 
 with open("local/userinputs/airmanInformations.txt", 'rt', encoding='UTF8') as f:

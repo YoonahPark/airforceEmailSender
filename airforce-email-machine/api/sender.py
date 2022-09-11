@@ -1,6 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-
 class _DriverAction:
     def __init__(self, driver):
         self.driver = driver
@@ -18,7 +17,7 @@ class _EmailSender(_DriverAction):
         self.sender = sender
         self.email = email
         self.__clickSendEmail()
-        self.__setAddress
+        self.__setAddress()
         self.__writeEmail()
         self.__submitEmail()
         return self.__verifySubmissionSuccess()
@@ -29,12 +28,12 @@ class _EmailSender(_DriverAction):
         if not self.driver.current_url.startswith(nextUrl):
             raise Exception("페이지 전환이 정상적으로 이루어지지 않았습니다.")
     
-    def __setAddress(self, sender):
+    def __setAddress(self):
         self.driver.execute_script('document.getElementById("senderZipcode").removeAttribute("readonly")')
         self.driver.execute_script('document.getElementById("senderAddr1").removeAttribute("readonly")')
-        self.send_keys(By.ID, "senderZipcode", sender.zipCode)
-        self.send_keys(By.ID, "senderAddr1", sender.address)
-        self.send_keys(By.ID, "senderAddr2", sender.addressDetail)
+        self.send_keys(By.ID, "senderZipcode", self.sender.zipCode)
+        self.send_keys(By.ID, "senderAddr1", self.sender.address)
+        self.send_keys(By.ID, "senderAddr2", self.sender.addressDetail)
         
     def __writeEmail(self):
         self.send_keys(By.ID, "senderName", self.sender.name)
@@ -58,6 +57,10 @@ def send(airman, sender, email, local=False):
     driver = None
     desired_capabilities = { "acceptInsecureCerts": True }
     options = webdriver.ChromeOptions()
+    options.add_argument("--allow-insecure-localhost")
+    options.add_argument("--ignore-certificate-errors")
+    options.add_argument("--allow-running-insecure-errors")
+    options.add_argument("--unsafely-treat-insecure-origin-as-secure")
     if(local):
         driver = webdriver.Chrome(executable_path="api/applications/chromedriver.exe", chrome_options=options)
     else:
